@@ -6,6 +6,7 @@
   "description": "prueba de web  server en express",
   "author": "jose",
   "dependencies": {
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "express-fileupload": "^1.3.1"
   }
 }
