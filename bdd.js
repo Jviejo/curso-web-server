@@ -1,22 +1,16 @@
-const pg = require("pg")
+const { Pool, Client } = require('pg')
 
-const client = new pg.Client({
-    user: "lector",
-    password: "lector",
-    database: "postgres",
-    port: 5433,
-    host: "pgadmin.jvh.kfs.es"
-})
+require('dotenv').config()
 
-client.connect(err => {
-    if (err) {
-        console.error('connection error', err.stack)
-    } else {
-       
-        client.query('SELECT NOW()', (err, res) => {
-            if (err) throw err
-            console.log(res.rows[0])
-            client.end()
-        })
-    }
-})
+const pool = new Pool()
+
+const q = async (q, parametros) => {
+    const client = await pool.connect()
+    const res = await client.query(q, parametros)
+    await client.release()
+    return res.rows
+}
+
+module.exports = {
+    q
+}

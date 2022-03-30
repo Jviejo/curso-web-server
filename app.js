@@ -1,8 +1,12 @@
 var express = require('express');
+var cors = require('cors')
 const fileUpload = require('express-fileupload');
 const req = require('express/lib/request');
 const rutas = require('./rutas')
+const {q} =require('./bdd')
+
 var app = express();
+app.use(cors())
 app.use(fileUpload({
     limits: { fileSize: 50 * 1024 * 1024 },
 }));
@@ -57,6 +61,12 @@ app.get("/peticion", (request, response) => {
 }
 )
 
+
+app.get('/customers/:id', async (req, res)=>{
+    const cliente = await q('select * From customers where customer_id = $1',[req.params.id] )
+    const facturas = await q('select * From orders where customer_id = $1',[req.params.id] )
+     res.send({cliente, facturas})
+})
 app.post("/urlencoded", (request, response) => {
     response.send({ body: request.body, q: request.query });
 }
@@ -78,6 +88,6 @@ app.post('/upload', (req, res) => {
 
 
 app.listen(5555, function () {
-    console.log('listening on port 4444');
+    console.log('listening on port 5555');
 })
 
